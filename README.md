@@ -1,219 +1,91 @@
-# Xanthan UNM Extension
+# Xanthan UNM extension
 
-Add University of New Mexico branding, navigation, and footer to your [Xanthan](https://github.com/fredgibbs/xanthan) static website.
+University of New Mexico branding for [Xanthan](https://github.com/xanthan-web/xanthan-web.github.io): the narrow cherry utility bar, white UNM wordmark hanging over a hero image, and university footer, adapted from [unm.edu](https://www.unm.edu/) on September 13, 2026.
 
-## What This Extension Provides
+The extension owns only these university components. It preserves Xanthan’s content grid, typography, hero images, menus, and search. It does not load Bootstrap, jQuery, UNM’s global homepage styles, or the university’s secondary navigation row.
 
-This extension adds UNM-specific elements to a Xanthan site:
-- **UNM Header** - Official UNM branding and navigation
-- **Department Navigation** - Customizable departmental links
-- **Site Navigation** - Your site's menu below the UNM header
-- **UNM Footer** - Official UNM footer with required links
-- **Google Tag Manager** - UNM analytics integration
+## Install
 
-## Prerequisites
+Start with a current Xanthan site. Copy these paths into the matching locations in that site:
 
-You need an existing Xanthan site. If you don't have one yet:
-1. Visit [Xanthan](https://github.com/fredgibbs/xanthan)
-2. Click "Use this template" to create your site
-3. Follow the Xanthan getting started guide
-4. Then come back here to add UNM branding
+- `_layouts/base-unm.html`
+- `_includes/unm/` (the entire folder)
+- `assets/css/unm.css`
+- `assets/js/unm.js`
+- `assets/unm/` (the entire folder)
 
-## Installation
+Use `layout: base-unm` in a page’s front matter, or make it the default in `_config.yml`:
 
-### Option 1: Manual Installation (GitHub Web Interface)
-
-**Best for:** Most users, especially if you're editing through GitHub's web interface.
-
-1. **Download this repository:**
-   - Click the green "Code" button above
-   - Select "Download ZIP"
-   - Unzip the downloaded file on your computer
-
-2. **Upload the layout file:**
-   - In your Xanthan repository on GitHub, navigate to the `_layouts/` folder
-   - Click "Add file" → "Upload files"
-   - Drag `base-unm.html` from the downloaded files into the upload area
-   - Commit the changes
-
-3. **Create the UNM includes folder:**
-   - Navigate to your `_includes/` folder
-   - Click "Add file" → "Create new file"
-   - Type `unm/placeholder.txt` as the filename (this creates the folder)
-   - Add any text content (it doesn't matter what)
-   - Commit the file
-
-4. **Upload the UNM include files:**
-   - Navigate to `_includes/unm/` (the folder you just created)
-   - Click "Add file" → "Upload files"
-   - Drag all files from the `_includes/unm/` folder in the downloaded files
-   - Commit the changes
-   - You can now delete `placeholder.txt`
-
-### Option 2: Command Line Installation
-
-**Best for:** Users working locally with Git.
-
-```bash
-# Navigate to your Xanthan repository
-cd path/to/your-xanthan-site
-
-# Copy the layout file
-curl -o _layouts/base-unm.html https://raw.githubusercontent.com/amaranth-unm/xanthan-unm/main/_layouts/base-unm.html
-
-# Create the unm folder and copy include files
-mkdir -p _includes/unm
-cd _includes/unm
-curl -O https://raw.githubusercontent.com/amaranth-unm/xanthan-unm/main/_includes/unm/page-header-unm.html
-curl -O https://raw.githubusercontent.com/amaranth-unm/xanthan-unm/main/_includes/unm/nav-unm.html
-curl -O https://raw.githubusercontent.com/amaranth-unm/xanthan-unm/main/_includes/unm/nav-site.html
-curl -O https://raw.githubusercontent.com/amaranth-unm/xanthan-unm/main/_includes/unm/footer-unm.html
-curl -O https://raw.githubusercontent.com/amaranth-unm/xanthan-unm/main/_includes/unm/footer-site.html
-
-# Commit and push
-git add _layouts/base-unm.html _includes/unm/
-git commit -m "Add UNM extension"
-git push
+```yaml
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: base-unm
 ```
 
-## Usage
+Explicit `layout` values in individual pages take precedence over defaults. See [INSTALLATION.md](INSTALLATION.md) for copying, upgrades, and troubleshooting.
 
-### Using UNM Layout on a Page
+## Hero images and navigation
 
-Add `layout: base-unm` to any page's YAML header:
+Use Xanthan’s normal hero settings:
 
 ```yaml
 ---
 layout: base-unm
-title: My UNM Page
+title: Department of Example
+header-image: /assets/images/campus.jpg
+header-title: Department of Example
+header-tier: section
 ---
-
-# Your page content here
 ```
 
-### Using UNM Layout Site-Wide
+The UNM logo extends below the utility bar over the hero. Pages without `header-image` reserve space beneath the logo so it cannot cover the site navigation or content. The site’s Xanthan menu appears below the hero; edit `_data/nav-top.yml` to change its links.
 
-To use UNM branding on all pages, edit each page's front matter to use `layout: base-unm` instead of `layout: base`.
+Configuration options in `_config.yml`:
 
-**Pro tip:** You can create a custom layout that includes UNM elements if you want more control over which pages use it.
+```yaml
+unm:
+  site_navigation: true     # Xanthan navigation below the hero
+  site_footer: false       # optional Xanthan site-specific footer
+  footer_directory: true   # university directory and Apply / Visit / Give
 
-## Customization
+# Optional: supply your own authorized container ID; disabled by default.
+# unm_gtm_id: GTM-XXXXXXX
+```
 
-### Edit Department Navigation
+The UNM identity, social, and legal footer remain when `footer_directory` is false. Analytics runs only in production builds with a configured ID.
 
-The departmental navigation bar appears at the top of UNM pages. To customize the links:
+## Widths and custom layouts
 
-1. Open `_includes/unm/nav-unm.html`
-2. Find the navigation links section
-3. Edit the URLs and text to match your department's needs
+The UNM shell is fluid with a **1170px maximum including 15px side gutters**. The desktop logo is 235 × 70px, over a 32px bar. On phones the logo is 180 × 54px over a 36px bar, with a keyboard-accessible disclosure menu.
 
-Example:
+All branding selectors use `unm-` classes. In particular, the extension never redefines Xanthan’s `.container` grid. Reading width and full-width content remain Xanthan’s responsibility.
+
+To align a site-specific region with the university footer text, use the shell directly:
+
 ```html
-<li><a href="https://history.unm.edu">History Department</a></li>
-<li><a href="https://history.unm.edu/about">About</a></li>
-<li><a href="https://history.unm.edu/people">People</a></li>
+<div class="unm-shell">Your site-specific region</div>
 ```
 
-### Edit Site Navigation
+Or reference `var(--unm-shell-width)` and `var(--unm-gutter)` from your own styles. Override `--unm-shell-width` on `.unm-site` if a different site-wide width is needed. Do not apply `.unm-shell` to Xanthan’s `.container`.
 
-Your site's navigation appears below the UNM header. To customize:
+For a custom layout, use `unm/page-header-unm.html` instead of `html/html-head.html`, put `class="unm-site"` on the body, and place `{% include unm/nav-unm.html overlap=true %}` immediately before your hero, outside the content grid. Omit `overlap=true` when there is no hero. Include `unm/footer-unm.html` near the end of the page and load `assets/js/unm.js` with `relative_url` and `defer`. Each include emits only its own component; the layout owns the document wrappers. You may customize `unm/footer-site.html` for department contact information.
 
-1. Open `_includes/unm/nav-site.html`
-2. Edit the links to match your site structure
+## Dependencies and verification
 
-### Customize Footer
+Requires the current Xanthan includes `html/html-head.html`, `html/html-js.html`, `nav/skip-link.html`, `nav/nav-top.html`, `nav/search.html`, `layout/page-header.html`, `layout/footer.html`, and `google_analytics.html`. This update was tested against Xanthan commit `5e106aac8ba5c93467d638db02ffe8430346ecd6` with Jekyll 4.4.
 
-The UNM footer includes required university links. To customize optional sections:
+Brand images are packaged locally. UNM fonts load from `webcore.unm.edu` with an Arial fallback. Footer social icons use Font Awesome already loaded by Xanthan. University search submits to `search.unm.edu`; site search remains Xanthan’s own search.
 
-1. Open `_includes/unm/footer-unm.html`
-2. Modify the footer sections while maintaining required UNM elements
+From a Xanthan site with Jekyll and Nokogiri available in its bundle:
 
-**Important:** UNM branding guidelines require certain elements to remain unchanged. Check with UNM Communications & Marketing before making significant changes.
-
-### Remove Google Tag Manager
-
-If you don't need UNM analytics tracking:
-
-1. Open `_layouts/base-unm.html`
-2. Delete or comment out the Google Tag Manager sections (lines 7-28)
-
-## File Structure
-
-```
-xanthan-unm/
-├── README.md (this file)
-├── _layouts/
-│   └── base-unm.html           # Main UNM layout template
-└── _includes/
-    └── unm/
-        ├── page-header-unm.html   # HTML head with UNM-specific settings
-        ├── nav-unm.html           # UNM departmental navigation
-        ├── nav-site.html          # Your site navigation
-        ├── footer-unm.html        # UNM official footer
-        └── footer-site.html       # Alternative footer option
+```sh
+bundle exec ruby /path/to/xanthan-unm/test/integration.rb /path/to/xanthan
 ```
 
-## Dependencies
+This builds a fresh integration with and without a hero at both a root URL and a project subpath, verifies the asset URLs and document structure, and checks the optional footer/menu settings. See [test/README.md](test/README.md) for visual width checks.
 
-This extension relies on the following Xanthan core includes (already in your Xanthan site):
-- `breadcrumbs.html` - Page breadcrumb navigation
-- `header-image.html` - Optional page header images
-- `page-js.html` - JavaScript includes
+## Credits and rights
 
-These files are part of Xanthan core and don't need to be installed separately.
-
-## Updating the Extension
-
-When UNM updates branding or requirements:
-
-1. Download the latest version of this repository
-2. Replace your existing files in `_layouts/base-unm.html` and `_includes/unm/`
-3. Commit and push the changes
-
-We'll maintain version tags for stable releases. Check the [Releases](https://github.com/amaranth-unm/xanthan-unm/releases) page for updates.
-
-## Troubleshooting
-
-### UNM navigation doesn't appear
-
-**Check:**
-- Is your page using `layout: base-unm` in the YAML header?
-- Did you upload all files from `_includes/unm/`?
-- Wait 1-2 minutes after committing for GitHub to rebuild your site
-
-### Layout looks broken
-
-**Check:**
-- Are all 5 files present in `_includes/unm/`?
-- Did you upload `base-unm.html` to the `_layouts/` folder?
-- Check GitHub Actions to see if there were build errors
-
-### Analytics not working
-
-**Check:**
-- Is the Google Tag Manager ID correct in `base-unm.html`?
-- Contact UNM Communications & Marketing for the correct tracking ID
-
-## Support
-
-- **Xanthan Issues:** [Xanthan GitHub Issues](https://github.com/fredgibbs/xanthan/issues)
-- **UNM Extension Issues:** [File an issue](https://github.com/amaranth-unm/xanthan-unm/issues)
-- **UNM Branding Questions:** UNM Communications & Marketing
-
-## Contributing
-
-If you improve the UNM extension:
-1. Fork this repository
-2. Make your changes
-3. Submit a pull request
-4. Describe what you changed and why
-
-## License
-
-This extension follows the same license as Xanthan core. See the main [Xanthan repository](https://github.com/fredgibbs/xanthan) for license details.
-
-## Credits
-
-- **Xanthan Template:** Fred Gibbs
-- **UNM Extension:** [Contributors](https://github.com/amaranth-unm/xanthan-unm/contributors)
-- **UNM Branding Guidelines:** UNM Communications & Marketing
+Xanthan: Fred Gibbs and contributors. University wordmarks and the footer background come from [UNM Webcore](https://webcore.unm.edu/). University trademarks retain their respective rights. The extension follows Xanthan’s GPL-3.0 code license; branding assets are not relicensed by this repository.

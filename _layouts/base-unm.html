@@ -1,81 +1,39 @@
 <!DOCTYPE html>
-<html>
-
-{% include unm/page-header-unm.html %}
-
-<body id="home">
-  <!-- Google Tag Manager -->
-<noscript>
-  <iframe src="//www.googletagmanager.com/ns.html?id=GTM-WQT2MB"
-          height="0" width="0" style="display:none;visibility:hidden">
-  </iframe>
-</noscript>
-
-<script>(function(w,d,s,l,i){
-    w[l]=w[l]||[];
-    w[l].push({
-      'gtm.start':
-      new Date().getTime(),event:'gtm.js'}
-             );
-    var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
-    j.async=true;
-    j.src=
-      '//www.googletagmanager.com/gtm.js?id='+i+dl;
-    f.parentNode.insertBefore(j,f);
-  }
-        )(window,document,'script','dataLayer','GTM-WQT2MB');
-</script>
-<!-- End Google Tag Manager -->
-
-{% include unm/nav-unm.html %}
-
-{% assign headerimage = page.header-image %}
-{% assign headertitle = page.header-title %}
-{% assign headerheight = page.header-height %}
-{% assign backgroundposition = page.background-position %}
-
-{% if headerimage %}
-
-{% include header-image.html   
-  height = headerheight
-  header-image = headerimage
-  title = headertitle
-  background-position = backgroundposition
-  prev_url = prev_url
-  next_url = next_url
-%}
-
-{% endif %}
-
-
-{% include unm/nav-site.html %}
-
-<!--UPPER-->
-<div id="upper"> 
-  <div class="container">
-  </div>
-</div>
-
-<div id="breadcrumbs">
-  <div class="container">
-    {% include breadcrumbs.html %}
-  </div>
-</div>
-
-<div aria-label="main content" id="main" role="main">
-    <div class="main-content-container">
-      {{ content }}
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+  {% include unm/page-header-unm.html %}
+  <body class="unm-site">
+    {% include nav/skip-link.html %}
+    {% include unm/analytics.html %}
+    <div class="page-wrap">
+      {% assign unm_has_hero = false %}
+      {% if page.header-image %}{% assign unm_has_hero = true %}{% endif %}
+      {% include unm/nav-unm.html overlap=unm_has_hero %}
+      {% if page.header-image %}
+        {% include layout/page-header.html
+          image-path=page.header-image
+          title=page.header-title
+          subtitle=page.header-subtitle
+          eyebrow=page.header-eyebrow
+          divider=page.header-divider
+          tier=page.header-tier
+          filter=page.header-filter
+          bg-position=page.header-position
+          bg-opacity=page.header-opacity
+          zoom=page.header-zoom
+          height=page.header-height
+          caption=page.header-caption
+        %}
+      {% endif %}
+      {% include unm/nav-site.html %}
+      <main id="main">
+        <div class="container">{{ content }}</div>
+      </main>
+      {% include unm/footer-site.html %}
+      {% include unm/footer-unm.html %}
+      {% include nav/search.html %}
     </div>
-</div>
-
-<!--
-{% include unm/footer-site.html %}
--->
-
-{% include unm/footer-unm.html %}
-
-{% include page-js.html %}
-
-</body>
+    {% include google_analytics.html %}
+    {% include html/html-js.html %}
+    <script src="{{ '/assets/js/unm.js' | relative_url }}" defer></script>
+  </body>
 </html>
